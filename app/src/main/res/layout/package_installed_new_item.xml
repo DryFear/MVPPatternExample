@@ -15,6 +15,15 @@
         android:padding="@dimen/medium_padding">
 
         <ImageView
+            android:id="@+id/system_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/medium_padding"
+            android:src="@drawable/ic_turned_in_black_24dp"
+            android:visibility="gone"/>
+
+        <ImageView
             android:id="@+id/app_icon_image_view"
             android:layout_width="50dp"
             android:layout_height="50dp"

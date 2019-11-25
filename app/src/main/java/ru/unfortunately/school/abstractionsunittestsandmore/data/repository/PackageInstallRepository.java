@@ -29,36 +29,45 @@ public class PackageInstallRepository {
     public List<InstalledPackageModel> getData(boolean isSystem){
         List<InstalledPackageModel> installedPackageModels = new ArrayList<>();
 
-        for(String packageName : getInstalledPackages(isSystem)){
+        for(ResolveInfo resolveInfo : getResolveInfosForInstalledPackages(isSystem)){
             InstalledPackageModel installedPackageModel = new InstalledPackageModel(
-                    getAppName(packageName),
-                    packageName,
-                    getAppIcon(packageName)
+                    getAppName(resolveInfo),
+                    getPackageName(resolveInfo),
+                    getAppIcon(resolveInfo),
+                    isSystemPackage(resolveInfo)
             );
             installedPackageModels.add(installedPackageModel);
         }
         return installedPackageModels;
     }
 
-    private List<String> getInstalledPackages(boolean isSystem){
-        List<String> apkPackageName = new ArrayList<>();
-
+    private List<ResolveInfo> getResolveInfosForInstalledPackages(boolean isSystem){
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        List<ResolveInfo> result = new ArrayList<>();
 
         List<ResolveInfo> resolveInfoList = mPackageManager.queryIntentActivities(intent, 0);
 
         for (ResolveInfo resolveInfo: resolveInfoList){
             if(isSystem || !isSystemPackage(resolveInfo)){
-                ActivityInfo activityInfo = resolveInfo.activityInfo;
-                apkPackageName.add(activityInfo.applicationInfo.packageName);
+                result.add(resolveInfo);
             }
         }
-        return apkPackageName;
+        return result;
+    }
+
+    private String getPackageName(@NonNull ResolveInfo resolveInfo){
+        ActivityInfo info = resolveInfo.activityInfo;
+        return info.applicationInfo.packageName;
     }
 
     private boolean isSystemPackage(@NonNull ResolveInfo resolveInfo){
         return ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+    }
+
+    private String getAppName(@NonNull ResolveInfo resolveInfo){
+        return getAppName(getPackageName(resolveInfo));
     }
 
     private String getAppName(@NonNull String packageName){
@@ -71,6 +80,10 @@ public class PackageInstallRepository {
             e.printStackTrace();
         }
         return appName;
+    }
+
+    private Drawable getAppIcon(@NonNull ResolveInfo resolveInfo){
+        return getAppIcon(getPackageName(resolveInfo));
     }
 
     private Drawable getAppIcon(@NonNull String packageName){

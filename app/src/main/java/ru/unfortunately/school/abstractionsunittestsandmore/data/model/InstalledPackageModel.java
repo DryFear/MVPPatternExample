@@ -10,10 +10,13 @@ public class InstalledPackageModel {
 
     private Drawable mAppIcon;
 
-    public InstalledPackageModel(String appName, String appPackageName, Drawable appIcon){
+    private boolean mIsSystem;
+
+    public InstalledPackageModel(String appName, String appPackageName, Drawable appIcon, boolean isSystem){
         mAppIcon = appIcon;
         mAppName = appName;
         mAppPackageName = appPackageName;
+        mIsSystem = isSystem;
     }
 
     public String getAppName(){
@@ -31,7 +34,15 @@ public class InstalledPackageModel {
     public void setAppPackageName(String appPackageName){
         mAppPackageName = appPackageName;
     }
-    public void setmAppIcon(Drawable appIcon){
+    public void setAppIcon(Drawable appIcon){
         mAppIcon = appIcon;
+    }
+
+    public boolean isSystem() {
+        return mIsSystem;
+    }
+
+    public void setSystem(boolean system) {
+        mIsSystem = system;
     }
 }

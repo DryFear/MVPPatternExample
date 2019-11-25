@@ -2,8 +2,13 @@ package ru.unfortunately.school.abstractionsunittestsandmore.presentation.view;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -21,6 +26,14 @@ public class MainActivity extends AppCompatActivity implements IMainActivity{
     private RecyclerView mRecyclerView;
     private FrameLayout mProgressFrameLayout;
     private MainPresenter mMainPresenter;
+    private Button mLoadDataButton;
+    private Spinner mSortTypeSpinner;
+    private CheckBox mSystemAppCheckbox;
+
+    public static final int NOT_SORT = 0;
+    public static final int SORT_BY_NAME = 1;
+    public static final int SORT_BY_PACKAGE_NAME = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity{
     @Override
     protected void onStart() {
         super.onStart();
-        mMainPresenter.loadData();
     }
 
     private void providePresenter() {
@@ -48,6 +60,32 @@ public class MainActivity extends AppCompatActivity implements IMainActivity{
         mRecyclerView = findViewById(R.id.recycler_view);
         mProgressFrameLayout = findViewById(R.id.progress_frame_layout);
         mRecyclerView.setLayoutManager(layoutManager);
+        mSystemAppCheckbox = findViewById(R.id.chk_box_show_system);
+        initLoadButton();
+        initSortTypesSpinner();
+    }
+
+    private void initSortTypesSpinner(){
+        mSortTypeSpinner = findViewById(R.id.spinner_sorts);
+        List<String> items = new ArrayList<>();
+        items.add(getString(R.string.dont_sort));
+        items.add(getString(R.string.sort_by_name));
+        items.add(getString(R.string.sort_by_package_name));
+        SpinnerSortAdapter adapter = new SpinnerSortAdapter(items);
+        mSortTypeSpinner.setAdapter(adapter);
+    }
+
+    private void initLoadButton() {
+        mLoadDataButton = findViewById(R.id.btn_load_data);
+        mLoadDataButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMainPresenter.loadData(
+                        mSystemAppCheckbox.isChecked(),
+                        mSortTypeSpinner.getSelectedItemPosition());
+                mLoadDataButton.setText(R.string.refresh);
+            }
+        });
     }
 
     @Override
