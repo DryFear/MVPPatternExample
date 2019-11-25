@@ -2,6 +2,8 @@ package ru.unfortunately.school.abstractionsunittestsandmore.data.model;
 
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.Nullable;
+
 public class InstalledPackageModel {
 
     private String mAppName;
@@ -44,5 +46,15 @@ public class InstalledPackageModel {
 
     public void setSystem(boolean system) {
         mIsSystem = system;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(!(obj instanceof InstalledPackageModel)) return false;
+        InstalledPackageModel model = (InstalledPackageModel) obj;
+
+        return (model.getAppName().equals(getAppName())) &&
+                (model.isSystem() == isSystem()) &&
+                (model.mAppPackageName.equals(getAppPackageName()));
     }
 }
