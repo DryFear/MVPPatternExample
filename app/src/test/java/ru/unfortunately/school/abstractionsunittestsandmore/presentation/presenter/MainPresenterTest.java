@@ -14,6 +14,7 @@ import java.util.List;
 import ru.unfortunately.school.abstractionsunittestsandmore.data.model.InstalledPackageModel;
 import ru.unfortunately.school.abstractionsunittestsandmore.data.repository.PackageInstallRepository;
 import ru.unfortunately.school.abstractionsunittestsandmore.presentation.view.IMainActivity;
+import ru.unfortunately.school.abstractionsunittestsandmore.presentation.view.MainActivity;
 
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.verify;
@@ -48,12 +49,10 @@ public class MainPresenterTest {
 
     @Test
     public void testDataSort(){
-//        Хотел тут сделать проверку на корректную сортировку
-//        но не знаю как получить аргумент, с которым вызывается MainActivity.showData()
-//
-//        List<InstalledPackageModel> modelList = createTestData();
-//        mMainPresenter.loadData(true, MainActivity.SORT_BY_NAME);
-
+        List<InstalledPackageModel> modelList = createTestData();
+        when(mPackageInstallRepository.getData(true)).thenReturn(new ArrayList<>(modelList));
+        mMainPresenter.loadData(true, MainActivity.SORT_BY_NAME);
+        verify(mMainActivity).showData(sortByName(modelList));
     }
 
     @Test
